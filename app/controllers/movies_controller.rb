@@ -3,8 +3,8 @@ class MoviesController < ApplicationController
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
-
-  def show
+  
+ def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
@@ -12,6 +12,30 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
+    sorting_technique = params[:sorting_technique]
+    if(!sorting_technique)
+      sorting_technique = session[:sorting_technique]
+    end
+    
+    session[:sorting_technique]= sorting_technique
+    @movies = Movie.order(sorting_technique)
+    @all_ratings = ['G','R','PG','PG-13']
+    @selected_rating = params[:ratings]
+    if(!@selected_rating)
+      @selected_rating=session[:ratings]
+    end
+    
+    if(@selected_rating)
+      @selected_rating_keys = @selected_rating.keys
+    else
+      @selected_rating_keys = @all_ratings
+    end
+    
+    session[:ratings]=@selected_rating
+    
+    @movies = Movie.where(rating: @selected_rating_keys).order(sorting_technique)
+
+    
   end
 
   def new
