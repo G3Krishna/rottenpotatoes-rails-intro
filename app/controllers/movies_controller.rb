@@ -12,28 +12,28 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
-    sorting_technique = params[:sorting_technique]
-    if(!sorting_technique)
-      sorting_technique = session[:sorting_technique]
+    column_to_be_sorted = params[:column_to_be_sorted]
+    if(!column_to_be_sorted)
+      column_to_be_sorted = session[:column_to_be_sorted]
     end
     
-    session[:sorting_technique]= sorting_technique
-    @movies = Movie.order(sorting_technique)
+    session[:column_to_be_sorted]= column_to_be_sorted
+    @movies = Movie.order(column_to_be_sorted)
     @all_ratings = ['G','R','PG','PG-13']
-    @selected_rating = params[:ratings]
-    if(!@selected_rating)
-      @selected_rating=session[:ratings]
+    @filtered_rating = params[:ratings]
+    if(!@filtered_rating)
+      @filtered_rating=session[:ratings]
     end
     
-    if(@selected_rating)
-      @selected_rating_keys = @selected_rating.keys
+    if(@filtered_rating)
+      @filtered_rating_keys = @filtered_rating.keys
     else
-      @selected_rating_keys = @all_ratings
+      @filtered_rating_keys = @all_ratings
     end
     
-    session[:ratings]=@selected_rating
+    session[:ratings]=@filtered_rating
     
-    @movies = Movie.where(rating: @selected_rating_keys).order(sorting_technique)
+    @movies = Movie.where(rating: @filtered_rating_keys).order(column_to_be_sorted)
 
     
   end

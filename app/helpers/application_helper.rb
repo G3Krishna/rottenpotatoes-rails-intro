@@ -1,10 +1,10 @@
 module ApplicationHelper
     
-    def highlight_helper(sorting_technique)
-        if(params[:sorting_technique]==sorting_technique)
+    def highlight_column(column_to_be_sorted)
+        if(params[:column_to_be_sorted]==column_to_be_sorted)
             return 'hilite'
         end
-        if(session[:sorting_technique]==sorting_technique)
+        if(session[:column_to_be_sorted]==column_to_be_sorted)
             return 'hilite'
         end
     end
